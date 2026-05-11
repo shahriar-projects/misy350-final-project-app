@@ -199,6 +199,9 @@ if st.session_state.page == "login":
             st.caption("Test Accounts:")
             st.caption("Shop Owner: owner1 / owner123")
             st.caption("Employee: employee1 / emp123")
+            st.divider()
+            st.caption("GitHub: https://github.com/shahriar-projects/misy350-final-project-app")
+            st.caption("Streamlit: https://misy350-final-project-app-shahriar-rahman.streamlit.app")
 
 
 # REGISTRATION PAGE

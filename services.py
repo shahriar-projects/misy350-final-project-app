@@ -6,7 +6,18 @@ This module sits between the UI (app.py) and the data layer (data.py).
 
 from datetime import datetime
 from openai import OpenAI, AuthenticationError, RateLimitError, APIConnectionError
+import hashlib
 import data
+
+
+def hash_password(password):
+    """Hash a password using SHA-256 before storing it."""
+    return hashlib.sha256(password.encode()).hexdigest()
+
+
+def verify_password(plain_password, hashed_password):
+    """Check if a plain-text password matches a stored hash."""
+    return hash_password(plain_password) == hashed_password
 
 
 class User:
@@ -30,8 +41,8 @@ class User:
         return self.role == required_role
 
     def to_dict(self):
-        """Convert the User object to a dictionary for JSON storage."""
-        return {"username": self.username, "password": self.password, "role": self.role}
+        """Convert the User object to a dictionary for JSON storage. Password is stored as a hash."""
+        return {"username": self.username, "password": hash_password(self.password), "role": self.role}
 
 
 class InventoryItem:
@@ -111,12 +122,16 @@ class AIAssistant:
 def validate_login(username, password):
     """
     Check username and password against stored users.
+    Supports both plain-text passwords (legacy) and hashed passwords.
     Returns a User object if valid, or None if not found.
     """
     users = data.load_users()
+    hashed = hash_password(password)
     for u in users:
-        if u["username"] == username and u["password"] == password:
-            return User(u["username"], u["password"], u["role"])
+        if u["username"] == username:
+            stored = u["password"]
+            if stored == hashed or stored == password:
+                return User(u["username"], u["password"], u["role"])
     return None
 
 

@@ -44,14 +44,17 @@ def init_data_files():
 def load_json(filepath):
     """
     Load and return data from a JSON file.
-    Returns an empty list if the file does not exist or is corrupted.
+    Returns an empty list if the file does not exist, is empty, or is corrupted.
     """
     try:
+        if not os.path.exists(filepath):
+            return []
         with open(filepath, "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return []
-    except json.JSONDecodeError:
+            content = f.read().strip()
+            if not content:
+                return []
+            return json.loads(content)
+    except (json.JSONDecodeError, IOError, OSError):
         return []
 
 
