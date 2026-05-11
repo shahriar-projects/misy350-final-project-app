@@ -1,12 +1,4 @@
 [
-  {
-    "username": "owner1",
-    "password": "owner123",
-    "role": "Shop Owner"
-  },
-  {
-    "username": "employee1",
-    "password": "emp123",
-    "role": "Employee"
-  }
+  {"username": "owner1", "password": "owner123", "role": "Shop Owner"},
+  {"username": "employee1", "password": "emp123", "role": "Employee"}
 ]
